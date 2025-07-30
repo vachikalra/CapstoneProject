@@ -42,7 +42,15 @@ struct MergedStudyBuddyView: View {
                     }
                     .padding()
                 }
-                .navigationTitle(section.rawValue)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Image("1")
+                            .resizable()
+                            .frame(width: 120, height: 120)
+                            .clipShape(Circle())
+                            .padding(.top, 50)
+                    }
+                }
             } else {
                 // Main menu
                 ZStack {
@@ -71,7 +79,6 @@ struct MergedStudyBuddyView: View {
                     }
                     .padding()
                 }
-                //.navigationTitle("Menu")
             }
         }
     }
