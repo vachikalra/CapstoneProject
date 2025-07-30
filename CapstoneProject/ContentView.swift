@@ -49,11 +49,11 @@ struct MergedStudyBuddyView: View {
                     Color(red: 0.933, green: 0.725, blue: 0.941)
                         .ignoresSafeArea()
                     VStack(spacing: 30) {
-                        Text("StudyBuddy")
-                            .font(.largeTitle)
-                            .foregroundColor(Color.white)
-                            .bold()
-                            .padding(.top)
+                        Image("1")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 200, height: 200)
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
                         ForEach(Section.allCases) { section in
                             Button(action: {
                                 selectedSection = section
