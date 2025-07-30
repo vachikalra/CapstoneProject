@@ -43,7 +43,7 @@ struct MergedStudyBuddyView: View {
                     .padding()
                 }
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
+                    ToolbarItem(placement: .navigationBarTrailing) {
                         Image("1")
                             .resizable()
                             .frame(width: 120, height: 120)
