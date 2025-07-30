@@ -44,7 +44,6 @@ struct MergedStudyBuddyView: View {
                 }
                 .navigationTitle(section.rawValue)
             } else {
-                // Main menu
                 ZStack {
                     Color(red: 0.933, green: 0.725, blue: 0.941)
                         .ignoresSafeArea()
