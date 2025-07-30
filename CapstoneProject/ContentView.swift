@@ -1,14 +1,7 @@
-//
-//  ContentView.swift
-//  CapstoneProject
-//
-//  Created by Vachi Kalra on 7/30/25.
-//
-
 import SwiftUI
 import UserNotifications
 
-struct ContentView: View {
+struct MergedStudyBuddyView: View {
     enum Section: String, CaseIterable, Identifiable {
         case tasks = "Tasks"
         case wellness = "Wellness"
@@ -16,38 +9,87 @@ struct ContentView: View {
         var id: String { self.rawValue }
     }
 
-    @State private var selection: Section? = .tasks
+    @State private var selectedSection: Section? = nil
     @State private var tasks: [TaskItem] = []
     @State private var newTask = ""
     @State private var challengeInput = ""
     @State private var selectedGroup: String? = nil
 
     var body: some View {
-        NavigationSplitView {
-            List(Section.allCases, selection: $selection) { section in
-                NavigationLink(section.rawValue, value: section)
-            }
-            .navigationTitle("StudyBuddy")
-        } detail: {
-            ZStack {
-                Color.purple.opacity(0.1).ignoresSafeArea()
-                switch selection {
-                case .tasks:
-                    taskView
-                case .wellness:
-                    wellnessView
-                case .challenges:
-                    challengeView
-                default:
-                    Text("Select a section")
+        NavigationStack {
+            if let section = selectedSection {
+                // Section screen
+                ZStack {
+                    Color(red: 0.933, green: 0.725, blue: 0.941)
+                        .ignoresSafeArea()
+                    VStack {
+                        Button("← Back") {
+                            selectedSection = nil
+                        }
+                        .foregroundColor(.blue)
+                        .padding(.top)
+
+                        switch section {
+                        case .tasks:
+                            taskView
+                        case .wellness:
+                            wellnessView
+                        case .challenges:
+                            challengeView
+                        }
+                    }
+                    .padding()
                 }
+                .navigationTitle(section.rawValue)
+            } else {
+                // Main menu
+                ZStack {
+                    Color(red: 0.933, green: 0.725, blue: 0.941)
+                        .ignoresSafeArea()
+                    VStack(spacing: 30) {
+                        Text("StudyBuddy")
+                            .font(.largeTitle)
+                            .foregroundColor(Color.white)
+                            .bold()
+                            .padding(.top)
+                        ForEach(Section.allCases) { section in
+                            Button(action: {
+                                selectedSection = section
+                            }) {
+                                Text(section.rawValue)
+                                    .font(.title2)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.white)
+                                    .foregroundColor(.purple)
+                                    .cornerRadius(12)
+                            }
+                            .padding(.horizontal)
+                        }
+                    }
+                    .padding()
+                }
+                //.navigationTitle("Menu")
             }
         }
     }
 
+    // MARK: - Task View
     var taskView: some View {
-        VStack {
-            Text("Tasks").font(.largeTitle).bold().padding()
+        VStack(spacing: 16) {
+            Text("Choose a Task Category")
+                .font(.title2)
+                .bold()
+                .padding(.top)
+
+            HStack(spacing: 20) {
+                Button("📚 Study") { addTask("Study for test") }
+                Button("🧹 Chores") { addTask("Do chores") }
+                Button("☕ Break") { addTask("Take a short break") }
+            }
+            .buttonStyle(.borderedProminent)
+
+            Divider()
 
             List {
                 ForEach(tasks) { task in
@@ -75,7 +117,7 @@ struct ContentView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 Button("Add") {
                     if !newTask.isEmpty {
-                        tasks.append(TaskItem(title: newTask))
+                        addTask(newTask)
                         newTask = ""
                     }
                 }
@@ -84,10 +126,11 @@ struct ContentView: View {
                 .foregroundColor(.white)
                 .cornerRadius(8)
             }
-            .padding()
+            .padding(.bottom)
         }
     }
 
+    // MARK: - Wellness View
     var wellnessView: some View {
         VStack(spacing: 16) {
             Text("Choose Your Group").font(.title2).bold().padding()
@@ -141,6 +184,7 @@ struct ContentView: View {
         }.padding()
     }
 
+    // MARK: - Challenge View
     var challengeView: some View {
         VStack(spacing: 16) {
             Text("What do you want reminders for every few hours?")
@@ -167,6 +211,11 @@ struct ContentView: View {
         .onAppear {
             requestNotificationPermission()
         }
+    }
+
+    // MARK: - Helpers
+    func addTask(_ title: String) {
+        tasks.append(TaskItem(title: title))
     }
 
     func markTaskComplete(_ task: TaskItem) {
@@ -206,5 +255,6 @@ struct TaskItem: Identifiable, Hashable {
 }
 
 #Preview {
-    ContentView()
+    MergedStudyBuddyView()
 }
+
