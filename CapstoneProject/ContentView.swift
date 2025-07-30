@@ -76,7 +76,6 @@ struct MergedStudyBuddyView: View {
         }
     }
 
-    // MARK: - Task View
     var taskView: some View {
         VStack(spacing: 16) {
             Text("Choose a Task Category")
@@ -132,7 +131,6 @@ struct MergedStudyBuddyView: View {
         }
     }
 
-    // MARK: - Wellness View
     var wellnessView: some View {
         VStack(spacing: 16) {
             Text("Choose Your Group").font(.title2).bold().padding()
@@ -186,7 +184,6 @@ struct MergedStudyBuddyView: View {
         }.padding()
     }
 
-    // MARK: - Challenge View
     var challengeView: some View {
         VStack(spacing: 16) {
             Text("What do you want reminders for every few hours?")
@@ -215,7 +212,6 @@ struct MergedStudyBuddyView: View {
         }
     }
 
-    // MARK: - Helpers
     func addTask(_ title: String) {
         tasks.append(TaskItem(title: title))
     }
