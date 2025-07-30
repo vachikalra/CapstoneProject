@@ -28,7 +28,7 @@ struct MergedStudyBuddyView: View {
                         Button("← Back") {
                             selectedSection = nil
                         }
-                        .foregroundColor(.blue)
+                        .foregroundColor(.white)
                         .padding(.top)
 
                         switch section {
