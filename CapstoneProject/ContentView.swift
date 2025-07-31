@@ -1,8 +1,6 @@
 import SwiftUI
 import UserNotifications
-
 //commit to push
-
 struct MergedStudyBuddyView: View {
     enum Section: String, CaseIterable, Identifiable {
         case tasks = "Tasks"
@@ -10,13 +8,11 @@ struct MergedStudyBuddyView: View {
         case challenges = "Challenges"
         var id: String { self.rawValue }
     }
-
     @State private var selectedSection: Section? = nil
     @State private var tasks: [TaskItem] = []
     @State private var newTask = ""
     @State private var challengeInput = ""
     @State private var selectedGroup: String? = nil
-
     var body: some View {
         NavigationStack {
             if let section = selectedSection {
@@ -28,9 +24,8 @@ struct MergedStudyBuddyView: View {
                         Button("← Back") {
                             selectedSection = nil
                         }
-                        .foregroundColor(.blue)
+                        .foregroundColor(.white)
                         .padding(.top)
-
                         switch section {
                         case .tasks:
                             taskView
@@ -43,7 +38,7 @@ struct MergedStudyBuddyView: View {
                     .padding()
                 }
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
+                    ToolbarItem(placement: .navigationBarTrailing) {
                         Image("1")
                             .resizable()
                             .frame(width: 120, height: 120)
@@ -82,7 +77,6 @@ struct MergedStudyBuddyView: View {
             }
         }
     }
-
     // MARK: - Task View
     var taskView: some View {
         VStack(spacing: 16) {
@@ -90,16 +84,13 @@ struct MergedStudyBuddyView: View {
                 .font(.title2)
                 .bold()
                 .padding(.top)
-
             HStack(spacing: 20) {
                 Button("📚 Study") { addTask("Study for test") }
                 Button("🧹 Chores") { addTask("Do chores") }
                 Button("☕ Break") { addTask("Take a short break") }
             }
-            .buttonStyle(.borderedProminent)
-
+            .buttonStyle(LavenderButtonStyle())
             Divider()
-
             List {
                 ForEach(tasks) { task in
                     HStack {
@@ -120,7 +111,6 @@ struct MergedStudyBuddyView: View {
                     tasks.remove(atOffsets: indexSet)
                 }
             }
-
             HStack {
                 TextField("Enter a task...", text: $newTask)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -130,15 +120,11 @@ struct MergedStudyBuddyView: View {
                         newTask = ""
                     }
                 }
-                .padding(.horizontal)
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .cornerRadius(8)
+                .buttonStyle(LavenderButtonStyle())
             }
             .padding(.bottom)
         }
     }
-
     // MARK: - Wellness View
     var wellnessView: some View {
         VStack(spacing: 16) {
@@ -148,14 +134,12 @@ struct MergedStudyBuddyView: View {
                 Button("High School") { selectedGroup = "High School" }
                 Button("College") { selectedGroup = "College" }
             }
-            .buttonStyle(.borderedProminent)
-
+            .buttonStyle(LavenderButtonStyle())
             if let group = selectedGroup {
                 adviceView(for: group)
             }
         }
     }
-
     func adviceView(for group: String) -> some View {
         let tips: [String]
         switch group {
@@ -184,7 +168,6 @@ struct MergedStudyBuddyView: View {
                 "Reach out for help if you’re struggling - you’re not alone."
             ]
         }
-
         return VStack(alignment: .leading, spacing: 8) {
             Text("Wellness Tips for \(group)").font(.title3).bold().padding(.top)
             ForEach(tips, id: \.self) { tip in
@@ -192,18 +175,15 @@ struct MergedStudyBuddyView: View {
             }
         }.padding()
     }
-
     // MARK: - Challenge View
     var challengeView: some View {
         VStack(spacing: 16) {
             Text("What do you want reminders for every few hours?")
                 .font(.headline)
                 .padding()
-
             TextField("e.g. Drink water", text: $challengeInput)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.horizontal)
-
             Button("Add Reminder") {
                 if !challengeInput.isEmpty {
                     let newChallenge = "⏰ \(challengeInput) Reminder (every 2 hrs)"
@@ -212,21 +192,16 @@ struct MergedStudyBuddyView: View {
                     challengeInput = ""
                 }
             }
-            .padding()
-            .background(Color.green)
-            .foregroundColor(.white)
-            .cornerRadius(10)
+            .buttonStyle(LavenderButtonStyle())
         }
         .onAppear {
             requestNotificationPermission()
         }
     }
-
     // MARK: - Helpers
     func addTask(_ title: String) {
         tasks.append(TaskItem(title: title))
     }
-
     func markTaskComplete(_ task: TaskItem) {
         if let index = tasks.firstIndex(where: { $0.id == task.id }) {
             tasks[index].isCompleted = true
@@ -235,7 +210,6 @@ struct MergedStudyBuddyView: View {
             }
         }
     }
-
     func requestNotificationPermission() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, _ in
             if granted {
@@ -243,26 +217,35 @@ struct MergedStudyBuddyView: View {
             }
         }
     }
-
     func scheduleRepeatingReminder(title: String) {
         let content = UNMutableNotificationContent()
         content.title = "Reminder"
         content.body = title
         content.sound = .default
-
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 7200, repeats: true) // 2 hours
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-
         UNUserNotificationCenter.current().add(request)
     }
 }
-
 struct TaskItem: Identifiable, Hashable {
     var id = UUID()
     var title: String
     var isCompleted = false
 }
-
+struct LavenderButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding()
+            .background(Color(red: 0.933, green: 0.725, blue: 0.941)) // Lavender
+            .foregroundColor(.white)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.purple, lineWidth: 2)
+            )
+            .cornerRadius(10)
+            .scaleEffect(configuration.isPressed ? 0.96 : 1.0)
+    }
+}
 #Preview {
     MergedStudyBuddyView()
 }
