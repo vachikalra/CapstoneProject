@@ -1,7 +1,6 @@
 import SwiftUI
 import UserNotifications
 
-//commit to push
 
 struct MergedStudyBuddyView: View {
     enum Section: String, CaseIterable, Identifiable {
@@ -20,7 +19,6 @@ struct MergedStudyBuddyView: View {
     var body: some View {
         NavigationStack {
             if let section = selectedSection {
-                // Section screen
                 ZStack {
                     Color(red: 0.933, green: 0.725, blue: 0.941)
                         .ignoresSafeArea()
